@@ -167,6 +167,7 @@ export default [
     'startVideoMuted',
     'startWithAudioMuted',
     'startWithVideoMuted',
+    'startRecording',
     'stereo',
     'subject',
     'testing',

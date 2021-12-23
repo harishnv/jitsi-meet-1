@@ -80,6 +80,7 @@ class ExternalAPIModule
         constants.put("SET_AUDIO_MUTED", BroadcastAction.Type.SET_AUDIO_MUTED.getAction());
         constants.put("HANG_UP", BroadcastAction.Type.HANG_UP.getAction());
         constants.put("SEND_ENDPOINT_TEXT_MESSAGE", BroadcastAction.Type.SEND_ENDPOINT_TEXT_MESSAGE.getAction());
+        constants.put("STOP_RECORDING", BroadcastAction.Type.STOP_RECORDING.getAction());
         constants.put("TOGGLE_SCREEN_SHARE", BroadcastAction.Type.TOGGLE_SCREEN_SHARE.getAction());
         constants.put("RETRIEVE_PARTICIPANTS_INFO", BroadcastAction.Type.RETRIEVE_PARTICIPANTS_INFO.getAction());
         constants.put("OPEN_CHAT", BroadcastAction.Type.OPEN_CHAT.getAction());

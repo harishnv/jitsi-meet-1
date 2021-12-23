@@ -82,6 +82,7 @@ public class BroadcastEvent {
         PARTICIPANT_JOINED("org.jitsi.meet.PARTICIPANT_JOINED"),
         PARTICIPANT_LEFT("org.jitsi.meet.PARTICIPANT_LEFT"),
         ENDPOINT_TEXT_MESSAGE_RECEIVED("org.jitsi.meet.ENDPOINT_TEXT_MESSAGE_RECEIVED"),
+        RECORDER_STATE_CHANGED("org.jitsi.meet.RECORDER_STATE_CHANGED"),
         SCREEN_SHARE_TOGGLED("org.jitsi.meet.SCREEN_SHARE_TOGGLED"),
         PARTICIPANTS_INFO_RETRIEVED("org.jitsi.meet.PARTICIPANTS_INFO_RETRIEVED"),
         CHAT_MESSAGE_RECEIVED("org.jitsi.meet.CHAT_MESSAGE_RECEIVED"),
@@ -95,6 +96,7 @@ public class BroadcastEvent {
         private static final String AUDIO_MUTED_CHANGED_NAME = "AUDIO_MUTED_CHANGED";
         private static final String PARTICIPANT_JOINED_NAME = "PARTICIPANT_JOINED";
         private static final String PARTICIPANT_LEFT_NAME = "PARTICIPANT_LEFT";
+        private static final String RECORDER_STATE_CHANGED_NAME = "RECORDER_STATE_CHANGED";
         private static final String ENDPOINT_TEXT_MESSAGE_RECEIVED_NAME = "ENDPOINT_TEXT_MESSAGE_RECEIVED";
         private static final String SCREEN_SHARE_TOGGLED_NAME = "SCREEN_SHARE_TOGGLED";
         private static final String PARTICIPANTS_INFO_RETRIEVED_NAME = "PARTICIPANTS_INFO_RETRIEVED";
@@ -135,6 +137,8 @@ public class BroadcastEvent {
                     return PARTICIPANT_JOINED;
                 case PARTICIPANT_LEFT_NAME:
                     return PARTICIPANT_LEFT;
+                case RECORDER_STATE_CHANGED_NAME:
+                    return RECORDER_STATE_CHANGED;
                 case ENDPOINT_TEXT_MESSAGE_RECEIVED_NAME:
                     return ENDPOINT_TEXT_MESSAGE_RECEIVED;
                 case SCREEN_SHARE_TOGGLED_NAME:

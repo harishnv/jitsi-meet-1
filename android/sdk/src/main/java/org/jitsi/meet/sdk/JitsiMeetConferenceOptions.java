@@ -198,6 +198,17 @@ public class JitsiMeetConferenceOptions implements Parcelable {
             return this;
         }
 
+         /**
+         * Indicates the conference will be joined with the camera muted.
+         * @param videoMuted - Muted indication.
+         * @return - The {@link Builder} object itself so the method calls can be chained.
+         */
+        public Builder setStartRecording(boolean startRecording) {
+            setConfigOverride("startRecording", startRecording);
+
+            return this;
+        }
+
         /**
          * Sets the welcome page enabled / disabled. The welcome page lists recent meetings and
          * calendar appointments and it's meant to be used by standalone applications. Defaults to
