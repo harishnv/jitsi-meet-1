@@ -60,6 +60,8 @@ const CHAT_MESSAGE_RECEIVED = 'CHAT_MESSAGE_RECEIVED';
  */
 const CHAT_TOGGLED = 'CHAT_TOGGLED';
 
+const RECORDER_STATE_CHANGED = 'RECORDER_STATE_CHANGED';
+
 /**
  * Event which will be emitted on the native side to indicate the conference
  * has ended either by user request or because an error was produced.
@@ -229,6 +231,14 @@ MiddlewareRegistry.register(store => next => action => {
                 muted: action.muted
             });
         break;
+    case RECORDER_STATE_CHANGED:
+        sendEvent(
+            store,
+            'RECORDER_STATE_CHANGED',
+            /* data */ {
+                status: action.status
+            });
+        break;
     }
 
     return result;
@@ -310,7 +320,6 @@ function _registerForNativeEvents(store) {
 
     eventEmitter.addListener(ExternalAPI.SET_AUDIO_MUTED, ({ muted }) => {
         dispatch(muteLocal(muted, MEDIA_TYPE.AUDIO));
-        logger.info('>>>>>>>>recevived event audio muted')
     });
 
     eventEmitter.addListener(ExternalAPI.SET_VIDEO_MUTED, ({ muted }) => {
@@ -406,6 +415,7 @@ function _unregisterForNativeEvents() {
     eventEmitter.removeAllListeners(ExternalAPI.RETRIEVE_PARTICIPANTS_INFO);
     eventEmitter.removeAllListeners(ExternalAPI.OPEN_CHAT);
     eventEmitter.removeAllListeners(ExternalAPI.CLOSE_CHAT);
+    eventEmitter.removeAllListeners(ExternalAPI.STOP_RECORDING);
     eventEmitter.removeAllListeners(ExternalAPI.SEND_CHAT_MESSAGE);
 }
 
@@ -448,6 +458,18 @@ function _registerForEndpointTextMessages(store) {
                         message,
                         isPrivate: false,
                         timestamp
+                    });
+            }
+    );
+
+    conference.on(
+        JitsiConferenceEvents.RECORDER_STATE_CHANGED,
+        recorderSession => {
+                sendEvent(
+                    store,
+                    RECORDER_STATE_CHANGED,
+                    /* data */ {
+                        status: recorderSession.getStatus()
                     });
             }
     );
