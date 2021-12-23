@@ -641,7 +641,7 @@ var config = {
     },
 
     // Decides whether the start/stop recording audio notifications should play on record.
-    // disableRecordAudioNotification: false,
+    disableRecordAudioNotification: true,
 
     // Disables the sounds that play when other participants join or leave the
     // conference (if set to true, these sounds will not be played).
