@@ -42,10 +42,12 @@ import { openChat } from '../../chat/actions';
 import { sendMessage, setPrivateMessageRecipient, closeChat } from '../../chat/actions.any';
 import { muteLocal } from '../../video-menu/actions';
 import { ENTER_PICTURE_IN_PICTURE } from '../picture-in-picture';
-
+import {} from '../../recording/functions'
 import { setParticipantsWithScreenShare } from './actions';
 import { sendEvent } from './functions';
 import logger from './logger';
+import { RECORDING_TYPES } from '../../recording/constants';
+import { getActiveSession } from '../../recording/functions';
 
 /**
  * Event which will be emitted on the native side when a chat message is received
@@ -308,10 +310,24 @@ function _registerForNativeEvents(store) {
 
     eventEmitter.addListener(ExternalAPI.SET_AUDIO_MUTED, ({ muted }) => {
         dispatch(muteLocal(muted, MEDIA_TYPE.AUDIO));
+        logger.info('>>>>>>>>recevived event audio muted')
     });
 
     eventEmitter.addListener(ExternalAPI.SET_VIDEO_MUTED, ({ muted }) => {
         dispatch(muteLocal(muted, MEDIA_TYPE.VIDEO));
+    });
+
+    eventEmitter.addListener(ExternalAPI.STOP_RECORDING, ({ mode }) => {
+        logger.info('>>>>>>>>recevived event')
+        const conference = getCurrentConference(getState());
+        const activeSession = getActiveSession(getState(), "file");
+        logger.info(`>>>>>>>> active session`, activeSession)
+        if (activeSession && activeSession.id) {
+            logger.info(`>>>>>>>> stopping recording`, activeSession)
+            conference.stopRecording(activeSession.id);
+        } else {
+            logger.error('>>>>>No recording or streaming session found');
+        }
     });
 
     eventEmitter.addListener(ExternalAPI.SEND_ENDPOINT_TEXT_MESSAGE, ({ to, message }) => {

@@ -48,4 +48,10 @@ public class BroadcastIntentHelper {
         intent.putExtra("muted", muted);
         return intent;
     }
+
+    public static Intent buildSendStopRecordingIntent() {
+        Intent intent = new Intent(BroadcastAction.Type.STOP_RECORDING.getAction());
+        intent.putExtra("mode", "file");
+        return intent;
+    }
 }
