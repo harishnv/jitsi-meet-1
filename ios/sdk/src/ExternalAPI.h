@@ -20,6 +20,7 @@
 
 - (void)sendHangUp;
 - (void)sendSetAudioMuted:(BOOL)muted;
+- (void)sendSetStopRecording;
 - (void)sendEndpointTextMessage:(NSString*)message :(NSString*)to;
 - (void)toggleScreenShare:(BOOL)enabled;
 - (void)retrieveParticipantsInfo:(void (^)(NSArray*))completion;
