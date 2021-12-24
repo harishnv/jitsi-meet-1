@@ -77,6 +77,13 @@
 - (void)audioMutedChanged:(NSDictionary *)data;
 
 /**
+ * Called when recorder state changed.
+ *
+ * The `data` dictionary contains a `mode` key with state of the file for the localParticipant.
+ */
+- (void)recorderStateChanged:(NSDictionary *)data;
+
+/**
  * Called when an endpoint text message is received.
  *
  * The `data` dictionary contains a `senderId` key with the participantId of the sender and a 'message' key with the content.

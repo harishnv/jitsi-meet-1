@@ -44,7 +44,7 @@ RCT_EXPORT_MODULE();
     return @{
         @"HANG_UP": hangUpAction,
         @"SET_AUDIO_MUTED" : setAudioMutedAction,
-        @"SET_STOP_RECORDING" : setStopRecordingAction,
+        @"STOP_RECORDING" : setStopRecordingAction,
         @"SEND_ENDPOINT_TEXT_MESSAGE": sendEndpointTextMessageAction,
         @"TOGGLE_SCREEN_SHARE": toggleScreenShareAction,
         @"RETRIEVE_PARTICIPANTS_INFO": retrieveParticipantsInfoAction,
