@@ -139,23 +139,23 @@ class OverflowMenu extends PureComponent<Props, State> {
                     ? this._renderReactionMenu
                     : null }>
                 <AudioRouteButton { ...topButtonProps } />
-                <ParticipantsPaneButton { ...buttonProps } />
+                {/* <ParticipantsPaneButton { ...buttonProps } /> */}
                 <AudioOnlyButton { ...buttonProps } />
                 {!_reactionsEnabled && !toolbarButtons.has('raisehand') && <RaiseHandButton { ...buttonProps } />}
                 <Divider style = { styles.divider } />
-                <SecurityDialogButton { ...buttonProps } />
+                {/* <SecurityDialogButton { ...buttonProps } />
                 <RecordButton { ...buttonProps } />
                 <LiveStreamButton { ...buttonProps } />
                 <MuteEveryoneButton { ...buttonProps } />
-                <MuteEveryonesVideoButton { ...buttonProps } />
+                <MuteEveryonesVideoButton { ...buttonProps } /> */}
                 <Divider style = { styles.divider } />
-                <SharedVideoButton { ...buttonProps } />
-                <ScreenSharingButton { ...buttonProps } />
+                {/* <SharedVideoButton { ...buttonProps } /> */}
+                {/* <ScreenSharingButton { ...buttonProps } /> */}
                 {!toolbarButtons.has('togglecamera') && <ToggleCameraButton { ...buttonProps } />}
                 {!toolbarButtons.has('tileview') && <TileViewButton { ...buttonProps } />}
                 <Divider style = { styles.divider } />
-                <ClosedCaptionButton { ...buttonProps } />
-                <SharedDocumentButton { ...buttonProps } />
+                {/* <ClosedCaptionButton { ...buttonProps } />
+                <SharedDocumentButton { ...buttonProps } /> */}
                 <HelpButton { ...buttonProps } />
             </BottomSheet>
         );

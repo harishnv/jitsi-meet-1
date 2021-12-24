@@ -178,7 +178,7 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
                 }
 
                 if (soundID) {
-                    dispatch(playSound(soundID));
+                    // dispatch(playSound(soundID));
                 }
 
                 if (typeof APP !== 'undefined') {
@@ -213,8 +213,8 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
                 }
 
                 if (soundOff && soundOn) {
-                    dispatch(stopSound(soundOn));
-                    dispatch(playSound(soundOff));
+                    // dispatch(stopSound(soundOn));
+                    // dispatch(playSound(soundOff));
                 }
 
                 if (typeof APP !== 'undefined') {

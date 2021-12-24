@@ -42,10 +42,12 @@ import { openChat } from '../../chat/actions';
 import { sendMessage, setPrivateMessageRecipient, closeChat } from '../../chat/actions.any';
 import { muteLocal } from '../../video-menu/actions';
 import { ENTER_PICTURE_IN_PICTURE } from '../picture-in-picture';
-
+import {} from '../../recording/functions'
 import { setParticipantsWithScreenShare } from './actions';
 import { sendEvent } from './functions';
 import logger from './logger';
+import { RECORDING_TYPES } from '../../recording/constants';
+import { getActiveSession } from '../../recording/functions';
 
 /**
  * Event which will be emitted on the native side when a chat message is received
@@ -57,6 +59,8 @@ const CHAT_MESSAGE_RECEIVED = 'CHAT_MESSAGE_RECEIVED';
  * Event which will be emitted on the native side when the chat dialog is displayed/closed.
  */
 const CHAT_TOGGLED = 'CHAT_TOGGLED';
+
+const RECORDER_STATE_CHANGED = 'RECORDER_STATE_CHANGED';
 
 /**
  * Event which will be emitted on the native side to indicate the conference
@@ -227,6 +231,14 @@ MiddlewareRegistry.register(store => next => action => {
                 muted: action.muted
             });
         break;
+    case RECORDER_STATE_CHANGED:
+        sendEvent(
+            store,
+            'RECORDER_STATE_CHANGED',
+            /* data */ {
+                status: action.status
+            });
+        break;
     }
 
     return result;
@@ -314,6 +326,19 @@ function _registerForNativeEvents(store) {
         dispatch(muteLocal(muted, MEDIA_TYPE.VIDEO));
     });
 
+    eventEmitter.addListener(ExternalAPI.STOP_RECORDING, ({ mode }) => {
+        logger.info('>>>>>>>>recevived event')
+        const conference = getCurrentConference(getState());
+        const activeSession = getActiveSession(getState(), "file");
+        logger.info(`>>>>>>>> active session`, activeSession)
+        if (activeSession && activeSession.id) {
+            logger.info(`>>>>>>>> stopping recording`, activeSession)
+            conference.stopRecording(activeSession.id);
+        } else {
+            logger.error('>>>>>No recording or streaming session found');
+        }
+    });
+
     eventEmitter.addListener(ExternalAPI.SEND_ENDPOINT_TEXT_MESSAGE, ({ to, message }) => {
         const conference = getCurrentConference(getState());
 
@@ -390,6 +415,7 @@ function _unregisterForNativeEvents() {
     eventEmitter.removeAllListeners(ExternalAPI.RETRIEVE_PARTICIPANTS_INFO);
     eventEmitter.removeAllListeners(ExternalAPI.OPEN_CHAT);
     eventEmitter.removeAllListeners(ExternalAPI.CLOSE_CHAT);
+    eventEmitter.removeAllListeners(ExternalAPI.STOP_RECORDING);
     eventEmitter.removeAllListeners(ExternalAPI.SEND_CHAT_MESSAGE);
 }
 
@@ -432,6 +458,18 @@ function _registerForEndpointTextMessages(store) {
                         message,
                         isPrivate: false,
                         timestamp
+                    });
+            }
+    );
+
+    conference.on(
+        JitsiConferenceEvents.RECORDER_STATE_CHANGED,
+        recorderSession => {
+                sendEvent(
+                    store,
+                    RECORDER_STATE_CHANGED,
+                    /* data */ {
+                        status: recorderSession.getStatus()
                     });
             }
     );
