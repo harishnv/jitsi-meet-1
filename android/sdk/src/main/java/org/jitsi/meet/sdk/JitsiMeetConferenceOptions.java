@@ -22,6 +22,8 @@ import android.os.Parcelable;
 
 import java.net.URL;
 
+import javax.annotation.Nullable;
+
 
 /**
  * This class represents the options when joining a Jitsi Meet conference. The user can create an
@@ -200,10 +202,10 @@ public class JitsiMeetConferenceOptions implements Parcelable {
 
          /**
          * Indicates the conference will be joined with the camera muted.
-         * @param videoMuted - Muted indication.
+         * @param startRecording - Muted indication.
          * @return - The {@link Builder} object itself so the method calls can be chained.
          */
-        public Builder setStartRecording(boolean startRecording) {
+        public Builder setStartRecording(@Nullable boolean startRecording) {
             setConfigOverride("startRecording", startRecording);
 
             return this;
