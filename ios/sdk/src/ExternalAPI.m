@@ -20,6 +20,7 @@
 // Events
 static NSString * const hangUpAction = @"org.jitsi.meet.HANG_UP";
 static NSString * const setAudioMutedAction = @"org.jitsi.meet.SET_AUDIO_MUTED";
+static NSString * const setStopRecordingAction = @"org.jitsi.meet.STOP_RECORDING";
 static NSString * const sendEndpointTextMessageAction = @"org.jitsi.meet.SEND_ENDPOINT_TEXT_MESSAGE";
 static NSString * const toggleScreenShareAction = @"org.jitsi.meet.TOGGLE_SCREEN_SHARE";
 static NSString * const retrieveParticipantsInfoAction = @"org.jitsi.meet.RETRIEVE_PARTICIPANTS_INFO";
@@ -43,6 +44,7 @@ RCT_EXPORT_MODULE();
     return @{
         @"HANG_UP": hangUpAction,
         @"SET_AUDIO_MUTED" : setAudioMutedAction,
+        @"STOP_RECORDING" : setStopRecordingAction,
         @"SEND_ENDPOINT_TEXT_MESSAGE": sendEndpointTextMessageAction,
         @"TOGGLE_SCREEN_SHARE": toggleScreenShareAction,
         @"RETRIEVE_PARTICIPANTS_INFO": retrieveParticipantsInfoAction,
@@ -67,6 +69,7 @@ RCT_EXPORT_MODULE();
 - (NSArray<NSString *> *)supportedEvents {
     return @[ hangUpAction,
               setAudioMutedAction,
+              setStopRecordingAction,
               sendEndpointTextMessageAction,
               toggleScreenShareAction,
               retrieveParticipantsInfoAction,
@@ -154,6 +157,12 @@ RCT_EXPORT_METHOD(sendEvent:(NSString *)name
     NSDictionary *data = @{ @"muted": [NSNumber numberWithBool:muted]};
 
     [self sendEventWithName:setAudioMutedAction body:data];
+}
+
+- (void)sendSetStopRecording {
+    NSDictionary *data = @{ @"mode": @"file"};
+
+    [self sendEventWithName:setStopRecordingAction body:data];
 }
 
 - (void)sendEndpointTextMessage:(NSString*)message :(NSString*)to {

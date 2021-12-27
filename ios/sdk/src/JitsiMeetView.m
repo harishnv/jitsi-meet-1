@@ -125,6 +125,11 @@ static void initializeViewsMap() {
     [externalAPI sendSetAudioMuted:muted];
 }
 
+- (void)sendSetStopRecording {
+    ExternalAPI *externalAPI = [[JitsiMeet sharedInstance] getExternalAPI];
+    [externalAPI sendSetStopRecording];
+}
+
 - (void)sendEndpointTextMessage:(NSString * _Nonnull)message :(NSString * _Nullable)to {
     ExternalAPI *externalAPI = [[JitsiMeet sharedInstance] getExternalAPI];
     [externalAPI sendEndpointTextMessage:message :to];

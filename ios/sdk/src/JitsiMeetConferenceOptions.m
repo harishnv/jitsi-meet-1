@@ -68,6 +68,10 @@ static NSString *const WelcomePageEnabledFeatureFlag = @"welcomepage.enabled";
     [self setConfigOverride:@"startWithVideoMuted" withBoolean:videoMuted];
 }
 
+- (void)setStartRecording:(BOOL)startRecording {
+    [self setConfigOverride:@"startRecording" withBoolean:startRecording];
+}
+
 - (void)setCallHandle:(NSString *_Nonnull)callHandle {
     [self setConfigOverride:@"callHandle" withValue:callHandle];
 }
