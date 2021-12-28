@@ -117,9 +117,9 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => action => {
                         && dispatch(
                             updateRecordingSessionData(recorderSession));
 
-                    recorderSession.getError()
-                        && _showRecordingErrorNotification(
-                            recorderSession, dispatch);
+                    // recorderSession.getError()
+                    //     && _showRecordingErrorNotification(
+                    //         recorderSession, dispatch);
                 }
 
                 return;
