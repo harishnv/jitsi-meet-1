@@ -74,7 +74,7 @@ class LonelyMeetingExperience extends PureComponent<Props> {
 
         return (
             <View style = { styles.lonelyMeetingContainer }>
-                <Text
+                {/* <Text
                     style = { [
                         styles.lonelyMessage,
                         _styles.lonelyMessage
@@ -100,7 +100,7 @@ class LonelyMeetingExperience extends PureComponent<Props> {
                             { t('lonelyMeetingExperience.button') }
                         </Text>
                     </TouchableOpacity>
-                ) }
+                ) } */}
             </View>
         );
     }
