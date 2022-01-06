@@ -4,6 +4,7 @@ import { shouldComponentUpdate } from 'react-window';
 
 import { connect } from '../../../base/redux';
 import { getCurrentLayout, LAYOUTS } from '../../../video-layout';
+import { getDisableSelfView } from '../../functions.any';
 
 import Thumbnail from './Thumbnail';
 
@@ -13,9 +14,14 @@ import Thumbnail from './Thumbnail';
 type Props = {
 
     /**
+     * Whether or not to hide the self view.
+     */
+    _disableSelfView: boolean,
+
+    /**
      * The horizontal offset in px for the thumbnail. Used to center the thumbnails in the last row in tile view.
      */
-     _horizontalOffset: number,
+    _horizontalOffset: number,
 
     /**
      * The ID of the participant associated with the Thumbnail.
@@ -69,14 +75,14 @@ class ThumbnailWrapper extends Component<Props> {
      * @returns {ReactElement}
      */
     render() {
-        const { _participantID, style, _horizontalOffset = 0 } = this.props;
+        const { _participantID, style, _horizontalOffset = 0, _disableSelfView } = this.props;
 
         if (typeof _participantID !== 'string') {
             return null;
         }
 
         if (_participantID === 'local') {
-            return (
+            return _disableSelfView ? null : (
                 <Thumbnail
                     horizontalOffset = { _horizontalOffset }
                     key = 'local'
@@ -104,6 +110,9 @@ function _mapStateToProps(state, ownProps) {
     const _currentLayout = getCurrentLayout(state);
     const { remoteParticipants } = state['features/filmstrip'];
     const remoteParticipantsLength = remoteParticipants.length;
+    const { testing = {} } = state['features/base/config'];
+    const disableSelfView = getDisableSelfView(state);
+    const enableThumbnailReordering = testing.enableThumbnailReordering ?? true;
 
     if (_currentLayout === LAYOUTS.TILE_VIEW) {
         const { columnIndex, rowIndex } = ownProps;
@@ -111,30 +120,36 @@ function _mapStateToProps(state, ownProps) {
         const { columns, rows } = gridDimensions;
         const index = (rowIndex * columns) + columnIndex;
         let horizontalOffset;
+        const { iAmRecorder } = state['features/base/config'];
+        const participantsLenght = remoteParticipantsLength + (iAmRecorder ? 0 : 1) - (disableSelfView ? 1 : 0);
 
         if (rowIndex === rows - 1) { // center the last row
             const { width: thumbnailWidth } = thumbnailSize;
-            const { iAmRecorder } = state['features/base/config'];
-            const partialLastRowParticipantsNumber = (remoteParticipantsLength + (iAmRecorder ? 0 : 1)) % columns;
+            const partialLastRowParticipantsNumber = participantsLenght % columns;
 
             if (partialLastRowParticipantsNumber > 0) {
                 horizontalOffset = Math.floor((columns - partialLastRowParticipantsNumber) * (thumbnailWidth + 4) / 2);
             }
         }
 
-        if (index > remoteParticipantsLength) {
+        if (index > participantsLenght - 1) {
             return {};
         }
 
-        if (index === remoteParticipantsLength) {
+        // When the thumbnails are reordered, local participant is inserted at index 0.
+        const localIndex = enableThumbnailReordering && !disableSelfView ? 0 : remoteParticipantsLength;
+        const remoteIndex = enableThumbnailReordering && !iAmRecorder && !disableSelfView ? index - 1 : index;
+
+        if (!iAmRecorder && index === localIndex) {
             return {
+                _disableSelfView: disableSelfView,
                 _participantID: 'local',
                 _horizontalOffset: horizontalOffset
             };
         }
 
         return {
-            _participantID: remoteParticipants[index],
+            _participantID: remoteParticipants[remoteIndex],
             _horizontalOffset: horizontalOffset
         };
     }

@@ -33,7 +33,6 @@ export function createFakeConfig(baseURL: string) {
             muc: `conference.${url.hostname}`
         },
         bosh: `${baseURL}http-bind`,
-        clientNode: 'https://jitsi.org/jitsi-meet',
         p2p: {
             enabled: true
         }
@@ -48,6 +47,16 @@ export function createFakeConfig(baseURL: string) {
  */
 export function getMeetingRegion(state: Object) {
     return state['features/base/config']?.deploymentInfo?.region || '';
+}
+
+/**
+ * Selector used to get the disableRemoveRaisedHandOnFocus.
+ *
+ * @param {Object} state - The global state.
+ * @returns {boolean}
+ */
+export function getDisableRemoveRaisedHandOnFocus(state: Object) {
+    return state['features/base/config']?.disableRemoveRaisedHandOnFocus || false;
 }
 
 /**
@@ -142,6 +151,18 @@ export function getWhitelistedJSON(configName: string, configJSON: Object): Obje
 
     return configJSON;
 }
+
+/**
+ * Selector for determining if the display name is read only.
+ *
+ * @param {Object} state - The state of the app.
+ * @returns {boolean}
+ */
+export function isNameReadOnly(state: Object): boolean {
+    return state['features/base/config'].disableProfile
+        || state['features/base/config'].readOnlyName;
+}
+
 
 /**
  * Restores a Jitsi Meet config.js from {@code localStorage} if it was

@@ -234,11 +234,11 @@ export function getConferenceOptions(stateful: Function | Object) {
     options.applicationName = getName();
     options.transcriptionLanguage = determineTranscriptionLanguage(options);
 
-    // Disable analytics, if requessted.
+    // Disable analytics, if requested.
     if (options.disableThirdPartyRequests) {
-        delete config.analytics.scriptURLs;
-        delete config.analytics.amplitudeAPPKey;
-        delete config.analytics.googleAnalyticsTrackingId;
+        delete config.analytics?.scriptURLs;
+        delete config.analytics?.amplitudeAPPKey;
+        delete config.analytics?.googleAnalyticsTrackingId;
         delete options.callStatsID;
         delete options.callStatsSecret;
     } else {
@@ -386,7 +386,7 @@ function _reportError(msg, err) {
 
 /**
  * Sends a representation of the local participant such as her avatar (URL),
- * e-mail address, and display name to (the remote participants of) a specific
+ * email address, and display name to (the remote participants of) a specific
  * conference.
  *
  * @param {Function|Object} stateful - The redux store, state, or

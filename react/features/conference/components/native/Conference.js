@@ -10,20 +10,18 @@ import { connect } from '../../../base/redux';
 import { ASPECT_RATIO_NARROW } from '../../../base/responsive-ui/constants';
 import { TestConnectionInfo } from '../../../base/testing';
 import { ConferenceNotification, isCalendarEnabled } from '../../../calendar-sync';
-import { Chat } from '../../../chat';
 import { DisplayNameLabel } from '../../../display-name';
-import { SharedDocument } from '../../../etherpad';
 import {
     FILMSTRIP_SIZE,
     Filmstrip,
     isFilmstripVisible,
     TileView
 } from '../../../filmstrip';
-import { AddPeopleDialog, CalleeInfoContainer } from '../../../invite';
+import { CalleeInfoContainer } from '../../../invite';
 import { LargeVideo } from '../../../large-video';
 import { KnockingParticipantList } from '../../../lobby';
+import { getIsLobbyVisible } from '../../../lobby/functions';
 import { BackButtonRegistry } from '../../../mobile/back-button';
-import { ParticipantsPane } from '../../../participants-pane/components/native';
 import { Captions } from '../../../subtitles';
 import { setToolboxVisible } from '../../../toolbox/actions';
 import { Toolbox } from '../../../toolbox/components/native';
@@ -34,8 +32,10 @@ import {
 } from '../AbstractConference';
 import type { AbstractProps } from '../AbstractConference';
 
+import { navigate } from './ConferenceNavigationContainerRef';
 import LonelyMeetingExperience from './LonelyMeetingExperience';
 import NavigationBar from './NavigationBar';
+import { screen } from './routes';
 import styles from './styles';
 
 
@@ -78,7 +78,7 @@ type Props = AbstractProps & {
     _isParticipantsPaneOpen: boolean,
 
     /**
-     * The ID of the participant currently on stage (if any)
+     * The ID of the participant currently on stage (if any).
      */
     _largeVideoParticipantId: string,
 
@@ -97,6 +97,11 @@ type Props = AbstractProps & {
      * The indicator which determines whether the Toolbox is visible.
      */
     _toolboxVisible: boolean,
+
+    /**
+     * Indicates whether the lobby screen should be visible.
+     */
+    _showLobby: boolean,
 
     /**
      * The redux {@code dispatch} function.
@@ -132,6 +137,23 @@ class Conference extends AbstractConference<Props, *> {
      */
     componentDidMount() {
         BackButtonRegistry.addListener(this._onHardwareBackPress);
+    }
+
+    /**
+     * Implements {@code Component#componentDidUpdate}.
+     *
+     * @inheritdoc
+     */
+    componentDidUpdate(prevProps) {
+        const { _showLobby } = this.props;
+
+        if (!prevProps._showLobby && _showLobby) {
+            navigate(screen.lobby);
+        }
+
+        if (prevProps._showLobby && !_showLobby) {
+            navigate(screen.conference.main);
+        }
     }
 
     /**
@@ -207,19 +229,6 @@ class Conference extends AbstractConference<Props, *> {
     }
 
     /**
-     * Renders JitsiModals that are supposed to be on the conference screen.
-     *
-     * @returns {Array<ReactElement>}
-     */
-    _renderConferenceModals() {
-        return [
-            <AddPeopleDialog key = 'addPeopleDialog' />,
-            <Chat key = 'chat' />,
-            <SharedDocument key = 'sharedDocument' />
-        ];
-    }
-
-    /**
      * Renders the conference notification badge if the feature is enabled.
      *
      * @private
@@ -243,10 +252,10 @@ class Conference extends AbstractConference<Props, *> {
     _renderContent() {
         const {
             _connecting,
-            _isParticipantsPaneOpen,
             _largeVideoParticipantId,
             _reducedUI,
-            _shouldDisplayTileView
+            _shouldDisplayTileView,
+            _toolboxVisible
         } = this.props;
 
         if (_reducedUI) {
@@ -295,7 +304,10 @@ class Conference extends AbstractConference<Props, *> {
 
                 <SafeAreaView
                     pointerEvents = 'box-none'
-                    style = { styles.navBarSafeView }>
+                    style = {
+                        _toolboxVisible
+                            ? styles.navBarSafeViewColor
+                            : styles.navBarSafeViewTransparent }>
                     <NavigationBar />
                     { this._renderNotificationsContainer() }
                     <KnockingParticipantList />
@@ -304,12 +316,7 @@ class Conference extends AbstractConference<Props, *> {
                 <TestConnectionInfo />
                 { this._renderConferenceNotification() }
 
-                { this._renderConferenceModals() }
-
                 {_shouldDisplayTileView && <Toolbox />}
-
-                { _isParticipantsPaneOpen && <ParticipantsPane /> }
-
             </>
         );
     }
@@ -426,6 +433,7 @@ function _mapStateToProps(state) {
         _largeVideoParticipantId: state['features/large-video'].participantId,
         _pictureInPictureEnabled: getFeatureFlag(state, PIP_ENABLED),
         _reducedUI: reducedUI,
+        _showLobby: getIsLobbyVisible(state),
         _toolboxVisible: isToolboxVisible(state)
     };
 }
